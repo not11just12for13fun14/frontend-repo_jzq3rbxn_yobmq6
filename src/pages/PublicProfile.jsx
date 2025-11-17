@@ -1,56 +1,49 @@
 import { useEffect, useState } from 'react'
-import Spline from '@splinetool/react-spline'
-import FooterNav from './components/FooterNav'
+import FooterNav from '../components/FooterNav'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
-function App() {
+export default function PublicProfile() {
   const [bundle, setBundle] = useState(null)
   const [loading, setLoading] = useState(true)
+  const slug = 'flames-blue'
 
   useEffect(() => {
-    async function load() {
+    (async () => {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/p/flames-blue`)
-        if (!res.ok) throw new Error('Failed to load demo profile')
-        const data = await res.json()
-        setBundle(data)
+        const res = await fetch(`${BACKEND_URL}/api/p/${slug}`)
+        if (!res.ok) throw new Error('Failed to load profile')
+        setBundle(await res.json())
       } catch (e) {
         console.error(e)
       } finally {
         setLoading(false)
       }
-    }
-    load()
+    })()
   }, [])
 
   return (
-    <div className="min-h-screen bg-flames-white flex flex-col pb-20">
-      <header className="relative h-[300px] md:h-[420px] w-full overflow-hidden">
-        <Spline scene="https://prod.spline.design/qQUip0dJPqrrPryE/scene.splinecode" style={{ width: '100%', height: '100%' }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent pointer-events-none" />
-      </header>
-
-      <main className="-mt-24 md:-mt-32 px-4 pb-4 flex justify-center">
-        <div className="w-full max-w-md rounded-2xl shadow-card overflow-hidden">
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="max-w-md mx-auto px-4 pt-6">
+        <div className="rounded-2xl shadow-card overflow-hidden">
           <div className="p-6" style={{ backgroundColor: '#008BDB', color: '#FFFFFF' }}>
             {loading ? (
-              <div className="animate-pulse space-y-3">
-                <div className="w-20 h-20 rounded-full bg-white/30 mx-auto" />
+              <div className="animate-pulse space-y-3 text-center">
+                <div className="w-24 h-24 rounded-full bg-white/30 mx-auto" />
                 <div className="h-4 bg-white/30 rounded w-2/3 mx-auto" />
                 <div className="h-3 bg-white/20 rounded w-1/2 mx-auto" />
               </div>
             ) : bundle ? (
               <div className="text-center">
                 <img src={bundle?.profile?.profile_image_path || 'https://api.dicebear.com/7.x/thumbs/svg?seed=FlamesBlue'} alt="avatar" className="w-24 h-24 rounded-full mx-auto" style={{ boxShadow: '0 0 0 4px #1D3F87' }} />
-                <h1 className="text-2xl font-semibold mt-4">{bundle.user.name}</h1>
+                <h1 className="text-2xl font-bold mt-4">{bundle.user.name}</h1>
                 <p className="text-sm opacity-90">{bundle.profile.job_title} {bundle.profile.company ? `• ${bundle.profile.company}` : ''}</p>
                 <a href={`${BACKEND_URL}/api/p/${bundle.user.profile_slug}/vcf`} className="mt-5 inline-flex items-center justify-center w-full py-3 rounded-lg font-semibold" style={{ backgroundColor: '#FCD900', color: '#1D3F87' }}>
                   Save Contact
                 </a>
               </div>
             ) : (
-              <div className="text-center py-8">Failed to load demo profile.</div>
+              <div className="text-center py-8">Failed to load profile.</div>
             )}
           </div>
 
@@ -60,7 +53,7 @@ function App() {
                 {bundle.social_links.map((l) => (
                   <li key={l.id}>
                     <a href={l.url} target="_blank" rel="noreferrer" className="flex items-center justify-between px-4 py-3 border rounded-lg hover:bg-gray-50">
-                      <span className="font-medium text-flames-dark capitalize">{l.platform}</span>
+                      <span className="font-medium text-flames-white-contrast capitalize" style={{ color: '#1D3F87' }}>{l.platform}</span>
                       <span className="text-sm text-gray-500 truncate max-w-[50%]">{l.url}</span>
                     </a>
                   </li>
@@ -71,13 +64,9 @@ function App() {
             )}
           </div>
         </div>
-      </main>
-
-      <footer className="text-center text-sm text-gray-500 py-6">© {new Date().getFullYear()} flamesblue.com</footer>
+      </div>
 
       <FooterNav />
     </div>
   )
 }
-
-export default App
