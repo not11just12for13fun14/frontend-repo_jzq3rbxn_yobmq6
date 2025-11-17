@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Spline from '@splinetool/react-spline'
+import TopNav from './components/TopNav'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-flames-white flex flex-col">
+      <TopNav />
       <header className="relative h-[300px] md:h-[420px] w-full overflow-hidden">
         <Spline scene="https://prod.spline.design/qQUip0dJPqrrPryE/scene.splinecode" style={{ width: '100%', height: '100%' }} />
         <div className="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent pointer-events-none" />
